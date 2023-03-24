@@ -761,6 +761,7 @@ div.feedback-panel .btn:active:focus, div.feedback-panel .btn:focus {
 /* Top navigation for portal */
 .portal-header-navbar {
     background-color: #fff;
+    color: #555;
     border-bottom: 0;
     box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.04), 0 7px 10px -5px rgba(0, 0, 0, 0.06);
     border-left: 1px solid #eee;

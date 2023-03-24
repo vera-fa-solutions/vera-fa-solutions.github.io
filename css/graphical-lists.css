@@ -9,12 +9,13 @@ ol.procedure, ul.procedure {
   list-style-type: none;
   margin-left: 40px;
 }
-.procedure {
+.procedure > li:first-child {
   counter-reset: step-counter;
 }
 .procedure > li {
   counter-increment: step-counter;
   margin-bottom: 10px;
+  min-height: 1em;
 }
 .procedure > li::before {
     float: left;
@@ -72,8 +73,8 @@ ul.checklist > li {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  
-  
+
+
   margin-bottom: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;

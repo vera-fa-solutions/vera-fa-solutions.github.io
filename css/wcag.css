@@ -27,7 +27,6 @@ div.skipnav a:focus, div.skipnav a:active, div.skipnav a:hover {
 	text-decoration: underline;
 	z-index: 99999; /* has to be higher than the side panel */
 }
-<
 
 /* Higher contrasts */
 

@@ -1,12 +1,4 @@
 
-    
-
-
-
-
-
-
-
 
 mark {
     background-color:#c0ffc8;
@@ -42,11 +34,11 @@ color: #000000;
 }
 
 .portal-header .search-field {
-	background-color: #FFFFFF;
+    background-color: #FFFFFF;
     border-color: #484848;
     color: #000000;
-    position: relative
-    top: 100px;
+    position: relative;
+    /* top: 100px; brakes ui */
 }
 
 .portal-header .portal-search button, .publication-contents h4 span {
@@ -104,7 +96,7 @@ color: #000000;
 .site-footer {
  font-size: 10px;
  box-sizing: border-box;
- width: 95%;
+ width: 90%;
  margin-left: 10%;
  position: relative;
 }
@@ -140,47 +132,9 @@ color: #000000;
 /*Previous and next buttons*/
 
 .pager li>a, .pager li>span {
-    color: #1976d2;
-}
-.pager li>a, .pager li>span {
-    border: 0;
-    transition: all 0.15s ease-out;
-    font-weight: 400;
-    font-size: 14px;
-}
-.pager li>a, .pager li>span {
-    padding: 5px 14px;
-    background-color: #fff;
-    border-radius: 15px;
-}
-
-/*Cookie consent*/
-
-div.cc-color-override--562569728.cc-window {
-    color: rgb(0, 0, 0);
-    background-color: rgb(255, 255, 255, 0.95);
-    border: 1px solid #F1F1F1;
-    font-family: Lato;
-    font-size: 14px;
-}
-
-a.cc-btn.cc-dismiss {
-       background-color: rgb(255, 255, 255, 0.95);
-       border: 1px solid #1976d2;
-}
-
-a.cc-btn.cc-dismiss:hover, a.cc-btn.cc-dismiss:focus {
-       background-color: rgb(0,119,205);
-}
-
-a.cc-link {
-  color: rgb(0, 0, 0) !important;
-}
-
-a.cc-btn.cc-deny  {
-    
-  color: rgb(0, 0, 0) !important;
-  
+    color: #000000;
+    font-weight: 300;
+    background-color: #F1F1F1; 
 }
 
 /*FA font for body text  */
@@ -238,7 +192,7 @@ body.theme1 {
 .search-field {
     background-color: rgba(255, 255, 255, 0.2);
     border: 1;
-    border-color: ##F1F1F1;
+    border-color: #F1F1F1;
     color: #fff;
     padding: 12px 15px;
 }
@@ -321,6 +275,10 @@ table tbody tr:last-of-type {
     font-size: 11px;
 }
 
+/*Break too long strngs - we have programlistings in tables, need to break them so that they fit into the table - DOC-336*/
+pre.programlisting {
+    word-break: break-word;
+}
 
 /* Line spacing in lists*/
 li p {
@@ -347,7 +305,7 @@ div.section-toc-title {
 
 /*Topic content on the right*/
 .section-nav.nav>li a {
-    padding: 5px 1
+    padding: 5px 1px;
     font-family: 'Lato', sans-serif;
     font-size: 14px;
 }
@@ -389,12 +347,36 @@ code {
 }
 
 
+/* these changes were added as a part of the new advanced search implementation -->*/
+.ais-RefinementList-count {
+    display: none;
+}
 
+.ais-RefinementList-labelText {
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #000000;
+}
 
+.refinement-title {
+    font-weight: 600;
+}
 
+.filters-panel {
+    width: 27% !important;
+}
 
+.portal-header .search-page-link a {
+    color: #1976d2 !important;
+}
 
+.portal-header .search-page-link a:hover {
+    color: #11508e !important;
+}
 
-
-
+.search-page-link {
+    margin-top: 15px !important;
+}
+/*<-- these changes were added as a part of the new advanced search implementation */
 
