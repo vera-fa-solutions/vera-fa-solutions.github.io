@@ -1,39 +1,39 @@
 var currentHash = "#"
 
 $(document).ready(function () {
-    
+
     /*
      * ========================================
      * ASN: Update URL on scroll for easy link copy. Currently not enabled in standard output
      * ========================================
      */
-    
+
     $(".accordion .panel-heading").click(function () {
         var top = window.pageYOffset;
         var distance = top - $(this).offset().top;
         var hash = $(this).closest('.accordion').attr('id');
-        
+
         currentHash = hash;
         didScroll = false;
         updateUrl();
     });
-    
+
     var topsection = "";
-    
+
     $(window).scroll(function () {
-        
+
         topsection = $('.article, .section').first().attr('id');
-        
-        if (! $("#aa-search-input").is(":focus")) {
+
+        if (! $("#aa-search-input, .aa-search-input").is(":focus")) {
             $('section[id], .accordion').each(function () {
-                
+
                 if ($(this).hasClass('accordion') && $(this).find('.active').length == 0) {
                     return true;
                 }
                 var top = window.pageYOffset;
                 var distance = top - $(this).offset().top;
                 var hash = $(this).attr('id');
-                
+
                 // 30 is an arbitrary padding choice,
                 if ((distance < 30) && (distance > -30) && (currentHash != hash)) {
                     currentHash = hash;
@@ -43,7 +43,7 @@ $(document).ready(function () {
         didScroll = true;
     });
     var didScroll = false;
-    
+
     /*ASN: Interval needed to do this, otherwise the scroll event fires the history.pushState hundreds of times a second, causing an error*/
     setInterval(function () {
         if (didScroll) {
@@ -52,7 +52,7 @@ $(document).ready(function () {
         }
     },
     500);
-    
+
     function updateUrl() {
         if (currentHash == topsection) {
             if (history.pushState) {
@@ -62,7 +62,7 @@ $(document).ready(function () {
             }
             return false;
         }
-        
+
         /*Otherwise update it to the current section*/
         if (history.pushState) {
             history.pushState(null, null, "#" + currentHash);

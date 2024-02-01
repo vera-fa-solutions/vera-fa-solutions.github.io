@@ -6,30 +6,32 @@ $(document).ready(function () {
         var tocstandalone = document.querySelector('meta[name="tocstandalone"]').content;
         if(tocstandalone == 'no'){
             $(document).trigger('toc.ready');
-        } 
+        }
     }
-    
+
     /*If a link target is a hidden accordion, first display it:
     =========*/
     var url = window.location.href;
     var hash = window.location.hash;
     /*From another page:*/
     displayAccordionTarget(hash);
-    
+
     /*Same page*/
     $(document.body).on('click', 'a.xref, a.topic-link, a.link, .aa-dropdown-menu a, #search-result-wrapper a', function (event) {
         var id = this.hash;
         displayAccordionTarget(id);
     });
-    
+
     /* Adjusting position in view for internal page toc links */
     $(document.body).on('click', '.section-nav-container a', function (e) {
         var clickedhref = $(this).attr('href');
+        var id = this.hash;
+        displayAccordionTarget(id);
         $(clickedhref).scrollView();
         e.preventDefault();
     });
     /*=========*/
-    
+
     //Bootstrap popovers for glossterms
     $('[data-toggle="popover"]').popover({
         animation: "fade",
@@ -46,7 +48,7 @@ $(document).ready(function () {
             return clone;
         }
     });
-    
+
     var $searchform = $(".tool-search-form");
     $(".toolbar .tool-search > i").click(function() {
         $searchform.show().fadeIn(100, function() {
@@ -59,14 +61,14 @@ $(document).ready(function () {
             $(this).hide();
             $(".top-nav-menu").fadeIn(100);
         });
-    });    
+    });
 
     /**
      * JM: This snippet will add an 'oncopy' eventlistener to all programlistings that are usign callouts.
-     * This listener will clean out any callout elements before copying and after the copying restore the 
-     * callouts.  
+     * This listener will clean out any callout elements before copying and after the copying restore the
+     * callouts.
      */
-    $(".programlisting").has(".co").on("copy", 
+    $(".programlisting").has(".co").on("copy",
     function () {
         // Save selection
         var sel = window.getSelection();
@@ -86,7 +88,7 @@ $(document).ready(function () {
             var $end = $('<span></span>').addClass(endClass);
             range.insertNode($end[0]);
         }
-        var el = $(this); 
+        var el = $(this);
         var innerHtml = el.html();
         el.find('.co').remove();
         setTimeout(function() {
@@ -117,7 +119,7 @@ $.fn.scrollView = function () {
 };
 
 $(document).on('toc.ready', function () {
-    
+
     $("aside ul.toc a").click(function (e) {
         //Only for internal sections:
         var r = new RegExp('#');
@@ -127,7 +129,7 @@ $(document).on('toc.ready', function () {
             $(this).parents("li").addClass("opened");
         }
     });
-    
+
     setActiveTocline();
     chunkedPrevNext();
     buildSectionToc();
@@ -147,13 +149,13 @@ $(document).on('toc.ready', function () {
             $('body').toggleClass('overflow-hidden');
         });
     }
-    
+
     /*Swagger embed needs the nav arrow for dynamically loaded sub toc:*/
-    var glyphicon = "<span class='glyphicon'></span>"; 
-    $('ul.nav-site-sidebar .swagger-topic').append(glyphicon);    
-    
-    /*Collapse sections:*/
-    $(".nav-site-sidebar a .glyphicon").click(function (e) {
+    var glyphicon = "<span class='glyphicon'></span>";
+    $('ul.nav-site-sidebar .swagger-topic').append(glyphicon);
+
+    /*Collapse sections (and make non-clickable topic headings act in the same way as glyphicons):*/
+    $(".nav-site-sidebar a:not(.topichead) .glyphicon, .nav-site-sidebar a.topichead").click(function (e) {
         e.preventDefault();
         $(this).closest("li").toggleClass("opened");
     });

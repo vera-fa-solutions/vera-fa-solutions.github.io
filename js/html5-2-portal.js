@@ -11,11 +11,11 @@ if (lang) {
 }
 
 $(document).ready(function () {
-    
+
     //Only show the current language
     showCurrentLanguage(portalLanguage);
     $("*[data-portal-language='" + portalLanguage + "'] .dropup.languages .dropdown-toggle").html($('*[data-portal-language="' + portalLanguage + '"] .language-item[lang="' + portalLanguage + '"]').text() + ' <b class="caret"></b>');
-    
+
     $(".language-item").click(function (e) {
         e.preventDefault();
         portalLanguage = $(this).attr('lang');
@@ -23,13 +23,13 @@ $(document).ready(function () {
         showCurrentLanguage(portalLanguage);
         addSearch();
     });
-    
+
     $(".category-more-toc").click(function (e) {
         e.preventDefault();
         $("*[data-portal-language='" + portalLanguage + "'] .portal-single-publication:not(:lt(" + categoriesShown + "))").toggle();
         $(this).find('.toggle-label').toggle();
     });
-    
+
     //Show/hide more toc entries for featured contents section
     $(".more-toc").prev("ul").find("> li:not(:lt(" + shown + "))").hide();
     $(".more-toc").click(function (e) {
@@ -39,7 +39,7 @@ $(document).ready(function () {
         //Featured sub topics show/hide
         $(this).find('.toggle-label').toggle();
     });
-    
+
     $("input.search-field").focus();
 });
 
@@ -65,7 +65,9 @@ function showCurrentLanguage(portalLanguage) {
     if (queryParamsString.length) {
         pageUrl = pageUrl + "&" + queryParamsString;
     }
-   
+
+    pageUrl += window.location.hash;
+
     var pageTitle = languageTitleMap[portalLanguage];
     if (pageTitle) {$("html head title").text(pageTitle);}
     window.history.replaceState('', '', pageUrl);
@@ -87,7 +89,7 @@ function getQueryVariables()
         var pair = varsString[i].split("=");
         vars[pair[0]] = pair[1];
     }
-    
+
     return vars;
 }
 

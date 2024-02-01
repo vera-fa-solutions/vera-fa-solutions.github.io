@@ -19,7 +19,7 @@ function setActiveTocline() {
 	$.each($("ul.toc a"), function (i, e) {
         var href = decodeURI(this.href);
         var r = new RegExp(path + '$');
-        
+
         if (r.test(href)) {
             $(this).closest(".topic-link").addClass("active");
             return false;
@@ -46,7 +46,7 @@ function buildLinkList() {
 	if ($("li", ul).size() > 0) {
 		var $div = $('<div id="bottom-links-container"></div>'),
 			$title = $('<h3 id="additional-links-header">Additional links</h3>');
-		
+
 		/*$div.append($title).append(ul).appendTo('#topic-content');*/
 		$div.append($title).append(ul).appendTo('.additional-links');
 	}
@@ -57,9 +57,9 @@ function buildSectionToc() {
         buildLinkList();
     } else if ($(".section-toc").length) {
         var links = $(".toc .topic-link.active:first").next("ul");
-        
+
         var linklistitems = links.find("li");
-        
+
         //First check there are actual listitems in the list, otherwise remove the section toc
         if (linklistitems.length == 0) {
             $(".section-toc").remove();
@@ -200,7 +200,7 @@ $(document).on('toc.ready', function(){
 	 * ========================================
 	 */
 	$("[data-toggle=popover]").popover({placement: 'top'});
-	
+
 	getEmbedCode();
 
 	/*
@@ -228,14 +228,14 @@ $(document).on('toc.ready', function(){
     setActiveTocline();
     buildSectionToc();
 	updateNavigation();
-	
+
     if (useanchorlinks) {
         setAnchors();
     }
-    
+
 	//JM: exclude image-viewport from getting the table class. PAL2-3275
 	$('#topic-content table:not(.image-viewport)').addClass('table');
-	
+
 	/* make the toc navigation sticky */
 	if ($.isFunction($.fn.sticky)){
 		$("#subheader").sticky({topSpacing:0});
@@ -364,7 +364,7 @@ $(document).on('toc.ready', function(){
 			hljs.highlightBlock(block);
 		});
 	}
-	
+
 	/*Adjust prev/next navigation to only include the proper ones in TOC:*/
 	chunkedPrevNext();
 });
@@ -376,14 +376,14 @@ function chunkedPrevNext(){
     var links = toc.find('a').filter(function () {
         return this.href.match(/.*\.html?$/);
     });
-    
-    
-    var nextlink = $('#header-navigation-next');
-    var prevlink = $('#header-navigation-prev');
-    
+
+  /*  PAL2-7900  there can be more than one prev/next link on a page, and they can be marked with either id or class */
+    var nextlink = $('.header-navigation-next,#header-navigation-next');
+    var prevlink = $('.header-navigation-prev,#header-navigation-prev');
+
     var next = '';
     var prev = '';
-    
+
     /*ASN: Looping the toc to create correct prev/next navigation corresponding to toc options.*/
     for (var index = 0; index < links.length; index++) {
         var minusone = links[index - 1];
@@ -395,7 +395,7 @@ function chunkedPrevNext(){
                 nextlink.attr('href', next);
             }
         }
-        
+
         if (typeof plusone !== "undefined") {
             if (plusone.classList.contains('active')) {
                 var jqueryObj = $(links[index]);
@@ -404,8 +404,8 @@ function chunkedPrevNext(){
             }
         }
     };
-    
-    
+
+
     if (next == '') {
         nextlink.remove();
     }
@@ -415,13 +415,13 @@ function chunkedPrevNext(){
 window.onload = function () {
     var acc = document.getElementsByClassName("panel-heading");
     var i;
-    
+
     for (i = 0; i < acc.length; i++) {
         acc[i].onclick = function () {
             /* Toggle between adding and removing the "active" class,
             to highlight the button that controls the panel */
             this.classList.toggle("active");
-            
+
             /* Toggle between hiding and showing the active panel */
             var panel = this.nextElementSibling;
             if (panel.style.display === "block") {

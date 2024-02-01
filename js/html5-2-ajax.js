@@ -3,26 +3,26 @@ $(document).on('toc.ready', function () {
     chunkedPrevNext();
     buildSectionToc();
     syntaxHighlight();
-    
+
     if(useanchorlinks){
         setAnchors();
     }
-    
-    
+
+
     if (theme == '3' || theme == '3b') {
         $("aside ul.toc").attr({
             "data-spy": "affix", "data-offset-top": "157", "data-offset-bottom": "50"
         });
     }
-    
+
     /*Swagger embed needs the nav arrow for dynamically loaded sub toc:*/
-    var glyphicon = "<span class='glyphicon'></span>"; 
+    var glyphicon = "<span class='glyphicon'></span>";
     $('ul.nav-site-sidebar .swagger-topic').append(glyphicon);
-    
-    $(".nav-site-sidebar a .glyphicon").click(function (e) {
+
+    $(".nav-site-sidebar a:not(.topichead) .glyphicon, .nav-site-sidebar a.topichead").click(function (e) {
         e.preventDefault();
         $(this).closest("li").toggleClass("opened");
-    });    
+    });
 });
 
 function syntaxHighlight() {
@@ -39,7 +39,7 @@ function syntaxHighlight() {
 function addPopover() {
     //Bootstrap popovers for glossterms
     $('[data-toggle="popover"]').off();
-    
+
     $('[data-toggle="popover"]').popover({
         trigger: "manual", placement: "auto bottom",
         container: 'body',
@@ -53,7 +53,7 @@ function addPopover() {
         $(this).popover("show");
         /*Disable lightbox in popovers:*/
         $(".popover .mediaobject img").removeClass('materialboxed');
-        
+
         $('.popover').on("mouseleave", function () {
             $(_this).popover('hide');
         });
@@ -75,23 +75,27 @@ $(document).ready(function () {
         var tocstandalone = document.querySelector('meta[name="tocstandalone"]').content;
         if(tocstandalone == 'no'){
             $(document).trigger('toc.ready');
-        } 
+        }
     }
-    
+
     history.replaceState(window.location.href, null, window.location.href);
     addPopover();
     initChecklist();
-    
-    initSearchField();   
-    
+
+    initSearchField();
+
     $(document.body).on('click', 'a[href]', function (event) {
         var clickedLink = $(this);
         var clickedhref = $(this).attr('href');
-        
+
         /* Adjusting position in view for internal page toc links. */
         if($(this).closest('.section-nav-container').length){
             $(clickedhref).scrollView();
             event.preventDefault();
+        }
+        /* Load entire page on languageswitch dropdown */
+        else if ($(event.target).hasClass('language-item dropdown-item')) {
+            /* Bypass ajax loading and load entire page */
         }
         /* Don’t load topic on glyphicon arrow toggle-click */
         else if ($(event.target).hasClass('glyphicon') && clickedLink.parents('.nav-site-sidebar').length) {
@@ -101,33 +105,33 @@ $(document).ready(function () {
         else if (clickedLink.parents('.version-dropdown').length) {
             /* Bypass ajax loading and load entire page */
         }
-        /*Make external links and home url redirect as usual:*/
-        else if (clickedhref.match(/^http.*|\/index\.html|^mailto/)) {
+        /*Make external links and home url redirect as usual (PAL2-9742 DJ: added match for /?lang= to catch PrettyURLs):*/
+        else if (clickedhref.match(/^http.*|\/index\.html|\/?lang=|^mailto/) && !($(event.target).hasClass("next") || $(event.target).hasClass("prev"))) {
             /*Just let link work as by default*/
         }
         /*Make special links like with target blank work as usual:*/
         else if ($(this)[0].hasAttribute("target")){
             /*Just let link work as by default to go to other publication and reload TOC*/
-        }  
-        
+        }
+
         /*Swagger topics need a full refresh. Handles both the topic itself, and the sub toc links:*/
         else if ($(event.target).is(".swagger-topic, .swagger-subnav")){
             /*Just let link work as by default*/
-        } 
-                
+        }
+
         else if ($(this)[0].hasAttribute("data-olink")){
             /*Just let link work as by default to go to other publication and reload TOC*/
-        } 
+        }
         //for accordions:
         else if ($(this).parents('.panel-heading').length) {
             event.preventDefault();
         } else {
             event.preventDefault();
             var href = this.href;
-            var hash = this.hash;
-            
+            var hash = jqEscapeChars(this.hash);
+
             history.pushState(href, null, href);
-            
+
             loadContent(href, hash);
         }
     });
@@ -148,7 +152,7 @@ function initSearchField(){
             $(this).hide();
             $(".top-nav-menu").fadeIn(100);
         });
-    }); 
+    });
 }
 
 /* Adjusting position in view for internal page toc links. Non-ajax handles this in html5-2.js */
@@ -171,27 +175,30 @@ function loadContent(href, hash) {
 
     /*Hide popovers if switching to a new page:*/
     $('[data-toggle="popover"]').popover('hide');
-    
+
     var id = href.split('#')[1];
+    if (typeof (id) !== "undefined") {
+        id = jqEscapeChars(id);
+    }
     $(".site-content").load(href + ' .site-content>*', function () {
         $(this).unbind('load');
-                
+
         /*Update window title:*/
         var loadedtitle = $(this).find('main .topic-content .titlepage .title > .title').first().text();
         $('head title').text(loadedtitle);
-        
+
         //Needs to be initialized after page load for ajax variant
         $(".mediaobject img:not(.materialboxed)").addClass('materialboxed');
         //Exclude images with links
 		$(".mediaobject a img").removeClass('materialboxed');
 	    $('.materialboxed').materialbox();
-        
+
         displayAccordionTarget(hash);
-        
-        initSearchField();  
-        
+
+        initSearchField();
+
         window.scrollTo(0, 0);
-        
+
         if (typeof (id) !== "undefined") {
             try {
                 scrollToElement($('#' + id));
@@ -202,7 +209,7 @@ function loadContent(href, hash) {
         }
         //Adjust to make sure title is in viewport
         window.scrollBy(0, -80);
-        
+
         //Keep other TOC sections open or not when clicking another section?
         if($('.current-toc-section-focus').length){
             $("aside ul.toc a").parent().removeClass("active").removeClass("opened");
@@ -210,12 +217,12 @@ function loadContent(href, hash) {
         else{
             $("aside ul.toc a").parent().removeClass("active");
         }
-        
-        
+
+
         $.each($("ul.toc a"), function (i, e) {
             var toclink = this.href;
             var r = new RegExp(href.split('#')[0] + '$');
-            
+
             if (r.test(toclink)) {
                 $(this).parent().addClass("active");
                 if($('.current-toc-section-focus').length){
@@ -230,23 +237,36 @@ function loadContent(href, hash) {
                 return false;
             }
         });
+        chunkedPrevNext();
         addSearch();
         addPopover();
         initChecklist();
         if(useanchorlinks){
             setAnchors();
         }
-        /*Init top navigation */			
-	   $('.sm.sm-simple').smartmenus({ subMenusMaxWidth: '30em', subMenusMinWidth: '15em' });   
+        /*Init top navigation */
+	   $('.sm.sm-simple').smartmenus({ subMenusMaxWidth: '30em', subMenusMinWidth: '15em' });
 	   //Call function to add global version dropdown in html5-2-mp-common.js. The variable versionsfile is defined in inline javascript
         if(versionsfile !== ''){
-            addGlobalVersions(versionsfile);    
-        }    
+            addGlobalVersions(versionsfile);
+        }
         mapVersionPage();
         //Get dynamic code snippets from URL
         getEmbedCode();
-        
+
     });
+}
+
+/**
+ * Because jQuery uses CSS syntax for selecting elements, 
+ * some characters are interpreted as CSS notation. 
+ * In order to tell jQuery to treat these characters literally rather than as CSS notation, 
+ * they must be escaped by placing two backslashes in front of them.
+ * @param {string} id string to escape characters in.
+ * @returns {string} string with special characters secaped.
+ */
+function jqEscapeChars(id) {
+    return id.replace( /(:|\.|\[|\]|,|=|@)/g, "\\$1" );
 }
 
 window.addEventListener('popstate', function (e) {

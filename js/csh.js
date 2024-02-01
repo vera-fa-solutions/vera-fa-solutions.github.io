@@ -1,4 +1,4 @@
-(function () {
+;(function () {
     var url = window.location.href;
     
     if (url.match(/\?contextId/)) {

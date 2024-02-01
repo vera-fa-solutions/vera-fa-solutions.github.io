@@ -20,7 +20,7 @@ function init(){
             return false;
         }
     });
-    
+
     if(enterKey === 'search'){
         var searchfield = $('form .search-field');
         $(".portal-search .btn").click(function (e) {
@@ -30,24 +30,24 @@ function init(){
     }
     else{
         //Disable, only keyup used
-        $(".portal-search .btn").prop("disabled", true);        
+        $(".portal-search .btn").prop("disabled", true);
     }
 
 
     addSearch();
-    
+
     var timeout;
     var delay = 200;
-    
+
     if(enterKey !== 'search'){
         //Unbind the keyup and focus events so we can select a new index for fuse for portal page:
         $('input#search').off('keyup focus');
-        
+
         //on keydown, clear the countdown for the keypress search delay
         $('input#search').on('keydown', function () {
             clearTimeout(timeout);
-        });    
-        
+        });
+
         $('input#search').on('keyup focus', function (e) {
             var _this = $(this);
             clearTimeout(timeout);
@@ -73,7 +73,7 @@ var $resultcontainer;
 var fuse;
 
 function addSearch() {
-    
+
     //For legacy HTML5:
     if ($('ul#page-tools').length) {
         $('ul#page-tools > li:first').html('<input placeholder="Search" type="text" class="form-control" id="search">');
@@ -81,11 +81,11 @@ function addSearch() {
         //For new HTML5: Only adds to the search field actually used in the current page
         $('.portal-search .search-field, .navbar-form .search-field, .site-sidebar-search .search-field, .tool-search-form .search-field').attr('id', 'search');
     }
-    
+
     //For legacy, where the search container is not already there
     if ($('.search-container').length == 0) {
         $resultcontainer = $('<div id="search-container"><h2>Search results</h2><ul class="searchresults"></ul></div>');
-        $resultcontainer.appendTo($('#content-wrapper'));
+        $resultcontainer.appendTo($('#content-wrapper, .content-wrapper'));
     } else {
         if ($("*[data-portal-language]").length) {
             $resultcontainer = $("*[data-portal-language='" + portalLanguage + "'] .portal-search-result");
@@ -93,24 +93,24 @@ function addSearch() {
             $resultcontainer = $('.search-container');
         }
     }
-    
+
     //Make sure it has the id, even if it's for 'preloaded' variant
     $resultcontainer.attr('id', 'search-container');
-    
-    searchHighlighter = new Mark("ul.searchresults");    
-    
+
+    searchHighlighter = new Mark("ul.searchresults");
+
     $resultcontainer.click(function () {
         hideSearch($resultcontainer);
     });
-    
+
     $('.portal-content, .site-content').click(function (e) {
         if($(e.target).closest('.toolbar').length === 0){
             hideSearch($resultcontainer);
         }
     });
-    
+
     hideSearch($resultcontainer);
-    
+
     var options = {
         shouldSort: true,
         threshold: fuse_threshold,
@@ -140,9 +140,9 @@ function search(e, searchfield) {
         var query = searchfield.val();
         // Search for it
         var result = fuse.search(query);
-        
+
         var $ul = $('ul.searchresults', $resultcontainer);
-        
+
         // Output it
         if (query === '') {
             $ul.empty();
@@ -158,26 +158,26 @@ function search(e, searchfield) {
             if ($('.portal-search-result').length) {
                 $('footer[data-portal-language="' + portalLanguage + '"]').hide();
             }
-            
+
             for (var item in result) {
                 //For permalinks: data-topic-level will only be set if produce.permalink = 1 in XSLT
                 var topiclevel = $('section[data-topic-level]').first().attr('data-topic-level');
                 var up = '';
-                
+
                 if (topiclevel != '') {
                     for (i = 1; i < parseInt(topiclevel);
                     i++) {
                         up += '../';
                     }
                 }
-                
+
                 var url = up + result[item].url;
-                
+
                 //If this is the portal/index page:
                 if ($('.portal-search-result').length) {
                     url = portalLanguage + '/' + result[item].url;
                 }
-                
+
                 var pathdisplay = '';
                 var breadcrumbs = result[item].breadcrumbs;
                 if (typeof breadcrumbs !== "undefined") {
@@ -185,7 +185,7 @@ function search(e, searchfield) {
                 } else {
                     pathdisplay = '<p class="search-result-url">' + url + '</p>';
                 }
-                
+
                 //If there's a video in the topic it has the string [video]:
                 var checkvideo = result[item].body.substring(0,7);
                 var videosearchicon = '';
@@ -193,7 +193,7 @@ function search(e, searchfield) {
                     //console.log('video');
                     videosearchicon = '<span class="video-search-icon" style="margin-left: 0.5em"><i class="fa fa-film" aria-hidden="true"></i></span>'
                 }
-                
+
                 if (result[item].snippet !== '') {
                     var $li = $('<li></li>')
                         .addClass('searchresultitem');
@@ -224,13 +224,13 @@ function search(e, searchfield) {
 
                     $li.append($a);
                 }
-                
+
                 $ul.append($li);
             }
-            
+
             showSearch($resultcontainer);
-                        
-            searchHighlighter.mark(query, {            
+
+            searchHighlighter.mark(query, {
                 "className": "search-highlight"
             });
         }
@@ -255,7 +255,7 @@ function hideSearch($resultcontainer) {
         $('footer[data-portal-language="' + portalLanguage + '"]').show();
     }
     $('.noresults').hide();
-    
+
     $('#topic-content').show();
 }
 
@@ -289,7 +289,7 @@ function selectResults(e) {
                 _new[0].scrollIntoView();
                 window.scrollBy(0, -80);
             }
-            
+
             return false;
         }
     }

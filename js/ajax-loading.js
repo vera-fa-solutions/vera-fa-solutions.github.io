@@ -16,29 +16,29 @@ $(document).ready(function () {
         else {
             event.preventDefault();
             var href = this.href;
-            
+
             var hash = this.hash;
-            
+
             history.pushState(href, null, href);
             /*$("#content-wrapper").load(href + ' #content-wrapper>*');*/
             loadContent(href, hash);
-            
+
             $('ul.toc a').removeClass('active');
-            
+
             $.each($("ul.toc a"), function (i, e) {
                 /*var href = $(this).attr("href");*/
                 var toclink = decodeURI(this.href);
                 var r = new RegExp(href + '$');
-                
+
                 if (r.test(toclink)) {
                     $(this).closest(".topic-link").addClass("active");
-                    
+
                     if (clickedLink.is('.topic-link')) {
                         toggleToc(clickedLink);
                     } else {
                         expandToc($(this));
                     }
-                    
+
                     mobileAjaxToc();
                     return false;
                 }
@@ -51,7 +51,7 @@ function mobileAjaxToc() {
     //ASN: Hide mobile TOC and show contents, for ajax version
     if (true === $(".mobile-nav-toggle").is(":visible")) {
         $("#toc-wrapper").hide();
-        $("#content-wrapper").show();
+        $("#content-wrapper, content-wrapper").show();
     }
 }
 
@@ -70,12 +70,12 @@ function expandToc(anchor) {
     $('ul.toc .topic-link.active').parents('ul').css('display', 'block');
     $('ul.toc li .glyphicon').removeClass("glyphicon-chevron-down");
     $('ul.toc li .glyphicon').addClass("glyphicon-chevron-right");
-    
+
     $('ul.toc .topic-link.active').parents('li').find('a:first .glyphicon').removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
-    
+
     var glyph = anchor.find('.glyphicon')
     glyph.removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
-    
+
     $('ul.toc .topic-link.active + ul').css('display', 'block');
 }
 
@@ -83,21 +83,21 @@ function scrollToElement(ele) {
     $(window).scrollTop(ele.offset().top).scrollLeft(ele.offset().left);
 }
 
-
+/* PAL2-7900 check this */
 function loadContent(href, hash) {
-    $("#content-wrapper").load(href + ' #content-wrapper>*', function () {
+    $("#content-wrapper, .content-wrapper").load(href + ' #content-wrapper>*', function () {
         $(this).unbind('load');
-        
+
         //ASN: Problem: makes the page reload for some reason on some clicks
         /*        if (hash !== "") {
         scrollToElement($(hash));
         }*/
-        
+
         chunkedPrevNext();
         buildSectionToc();
         addSearch();
     });
-    
+
     $(".breadcrumb-container").load(href + ' .breadcrumb-container>*', function () {
         $(this).unbind('load');
     });
@@ -105,7 +105,7 @@ function loadContent(href, hash) {
 
 window.addEventListener('popstate', function (e) {
     var href = e.state;
-    
+
     if (href == null) {
         //Do nothing?
     } else {
