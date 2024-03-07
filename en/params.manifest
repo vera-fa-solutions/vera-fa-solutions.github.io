@@ -12,7 +12,7 @@
   <param name="custom.css.source" select="/var/www/ccms/usr/fasolutions/xsl/custom/assets/layout-277042/653f8831a6645.css"/>
   <param name="portal.logo.filename" select="/var/www/ccms/usr/fasolutions/xsl/custom/assets/layout-277042/6110ef0e4aed1.png"/>
   <param name="portal.background.filename" select="/var/www/ccms/usr/fasolutions/xsl/custom/assets/layout-277042/6053bad8f3438.jpeg"/>
-  <param name="portal.background.filename.out" select="/paligo/tmp/fasolutions/production-65e9662aa94797.47456485/Documentation_for_review/out/css/image/portal-bg.jpg"/>
+  <param name="portal.background.filename.out" select="/paligo/tmp/fasolutions/production-65e96726d92451.74647535/Documentation_for_review/out/css/image/portal-bg.jpg"/>
   <param name="company.name" select="FA Solutions"/>
   <param name="copyright.year" select=""/>
   <param name="copyright"> © 2024 FA Solutions </param>
@@ -100,11 +100,11 @@
   <param name="slides.revealjs.theme.custom" select=""/>
   <param name="slides.revealjs.background.image.opacity" select="1"/>
   <param name="slides.revealjs.default.background.image" select=""/>
-  <param name="slides.revealjs.default.background.image.out" select="/paligo/tmp/fasolutions/production-65e9662aa94797.47456485/Documentation_for_review/out/css/image/default_slide_background.png"/>
+  <param name="slides.revealjs.default.background.image.out" select="/paligo/tmp/fasolutions/production-65e96726d92451.74647535/Documentation_for_review/out/css/image/default_slide_background.png"/>
   <param name="slides.revealjs.logo" select=""/>
-  <param name="slides.revealjs.logo.out" select="/paligo/tmp/fasolutions/production-65e9662aa94797.47456485/Documentation_for_review/out/css/image/logo-light.png"/>
+  <param name="slides.revealjs.logo.out" select="/paligo/tmp/fasolutions/production-65e96726d92451.74647535/Documentation_for_review/out/css/image/logo-light.png"/>
   <param name="slides.revealjs.logo.alt" select=""/>
-  <param name="slides.revealjs.logo.alt.out" select="/paligo/tmp/fasolutions/production-65e9662aa94797.47456485/Documentation_for_review/out/css/image/logo-dark.png"/>
+  <param name="slides.revealjs.logo.alt.out" select="/paligo/tmp/fasolutions/production-65e96726d92451.74647535/Documentation_for_review/out/css/image/logo-dark.png"/>
   <param name="delayed.algolia.search" select="0"/>
   <param name="use.breadcrumbs.for.algolia.searchresults" select="0"/>
   <param name="choose.startpage.by.role" select="0"/>
