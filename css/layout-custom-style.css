@@ -282,7 +282,7 @@ pre.programlisting {
 
 /* Line spacing in lists*/
 li p {
-   margin-bottom: 0.3em; /* or 0.3em or similar for just a little space */
+   margin-bottom: 0em; /* or 0.3em or similar for just a little space */
 }
 
 .blockquote {
