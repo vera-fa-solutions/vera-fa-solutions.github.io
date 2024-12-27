@@ -356,15 +356,7 @@ $(document).on('toc.ready', function(){
 		$('[data-spy="affix"]:visible').affix('checkPosition');
 	});
 
-	/**
-	 * Turn on syntax highlight if the hljs lib is available
-	 */
-	if ("hljs" in window) {
-		$('pre').each(function(i, block) {
-			hljs.highlightBlock(block);
-		});
-	}
-
+	
 	/*Adjust prev/next navigation to only include the proper ones in TOC:*/
 	chunkedPrevNext();
 });

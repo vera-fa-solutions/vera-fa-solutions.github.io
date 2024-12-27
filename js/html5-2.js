@@ -36,7 +36,7 @@ $(document).ready(function () {
     $('[data-toggle="popover"]').popover({
         animation: "fade",
         delay: {
-            show: "500",
+            show: "200",
             hide: "100"
         },
         trigger: "hover",
@@ -155,8 +155,16 @@ $(document).on('toc.ready', function () {
     $('ul.nav-site-sidebar .swagger-topic').append(glyphicon);
 
     /*Collapse sections (and make non-clickable topic headings act in the same way as glyphicons):*/
-    $(".nav-site-sidebar a:not(.topichead) .glyphicon, .nav-site-sidebar a.topichead").click(function (e) {
-        e.preventDefault();
-        $(this).closest("li").toggleClass("opened");
-    });
+    if (collapseTocSectionOnLinkTitleClick) {
+        $(".nav-site-sidebar a:not(.topichead) .glyphicon, .nav-site-sidebar a.topichead, .nav-site-sidebar li.active.opened>a").click(function (e) {
+            e.preventDefault();
+            $(this).closest("li").toggleClass("opened");
+        });
+    }else {
+        $(".nav-site-sidebar a:not(.topichead) .glyphicon, .nav-site-sidebar a.topichead").click(function (e) {
+            e.preventDefault();
+            $(this).closest("li").toggleClass("opened");
+        });
+    }
+    
 });

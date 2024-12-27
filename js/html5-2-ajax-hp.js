@@ -16,17 +16,6 @@ $(document).on('toc.ready', function () {
 });
 
 
-function syntaxHighlight() {
-    /**
-     * Turn on syntax highlight if the hljs lib is available
-     */
-    if ("hljs" in window) {
-        $('pre').each(function (i, block) {
-            hljs.highlightBlock(block);
-        });
-    }
-}
-
 function setActiveTocline() {
     // set the active link in the toc on first load
     var path = purl().attr("path");
@@ -49,8 +38,9 @@ $(document).ready(function () {
     }
 
     //Bootstrap popovers for glossterms
-        $('[data-toggle="popover"]').popover({
-        trigger: "manual", placement: "auto bottom",
+    $('[data-toggle="popover"]').popover({
+        trigger: "manual",
+        placement: "auto bottom",
         container: 'body',
         html: true,
         content: function () {
@@ -64,12 +54,17 @@ $(document).ready(function () {
         $(".popover .mediaobject img").removeClass('materialboxed');
 
         $('.popover').on("mouseleave", function () {
-            $(_this).popover('hide');
+            setTimeout(function () {
+                if (! $('.popover:hover').length && ! $(_this).is(':hover')) {
+                    $(_this).popover("hide");
+                }
+            },
+            300);
         });
     }).on("mouseleave", function () {
         var _this = this;
         setTimeout(function () {
-            if (! $('.popover:hover').length) {
+            if (! $('.popover:hover').length && ! $(_this).is(':hover')) {
                 $(_this).popover("hide");
             }
         },
@@ -120,6 +115,44 @@ function scrollToElement(ele) {
     }
 }
 
+function getEmbedCode(){
+    $("pre.embedcode[data-resource^='https:']").each(function () {
+        /**
+         * @type {Object}
+         */
+        var $pre = $(this);
+
+        /**
+         * @type {String}
+         */
+        var resource = $(this).data("resource");
+
+        $.get(resource)
+            .fail(function(){
+                throw "[Paligo] Not able to load source: "+resource;
+            })
+            .success(function(data) {
+                let code = {
+                    value: data,
+                    language: '',
+                };
+
+                if (typeof hljs !== 'undefined') {
+                    $pre.empty().addClass('hljs');
+
+                    if ($pre.data('language') && $.inArray($pre.data('language'), hljs.listLanguages()) > -1) {
+                        code = hljs.highlight($pre.data('language'), code.value);
+                    } else {
+                        code = hljs.highlightAuto(code.value);
+                    }
+                } else {
+                    $pre.empty();
+                }
+
+                $pre.append(code.value).addClass(code.language);
+            });
+    });
+}
 
 function loadContent(href, hash) {
 
@@ -131,7 +164,7 @@ function loadContent(href, hash) {
 
     $('.search-container').hide();
 
-    var id = href.split('#')[1];
+    var id = escapeHtml(href.split('#')[1]);
     //Check if it's an anchorlink, in that case we need to remove that prefix to get the regular id
     id = id.replace(/^al_/, '');
     //Some languages can have special characters that would not work for the link unless decoded
@@ -151,7 +184,7 @@ function loadContent(href, hash) {
         setAnchors();
     }
 
-    var hashpart = '#' + href.split('#')[1];
+    var hashpart = '#' + escapeHtml(href.split('#')[1]);
 
     /*Links to nested accordions not supported in the Preloaded variant*/
 
@@ -176,13 +209,14 @@ function loadContent(href, hash) {
             $(this).parents("li").toggleClass("opened");
 
             buildSectionToc();
-            syntaxHighlight();
+            
             addSearch();
             return false;
         }
     });
     addBreadcrumbs();
     chunkedPrevNext();
+    getEmbedCode();
 }
 
 //No breadcrumbs created in xslt for ""Preloaded"" version, created here:
@@ -274,6 +308,24 @@ function chunkedPrevNext() {
         prevlink.show();
         prevlink.attr('href', '#' + prevId);
     }
+}
+
+/**
+ * Escape user input in order to prevent XSS attacks
+ *
+ * @param unsafe
+ * @returns {*}
+ */
+function escapeHtml(unsafe) {
+    if (! unsafe) {
+        return unsafe;
+    }
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 window.addEventListener('popstate', function (e) {

@@ -29,13 +29,13 @@
 
     function mapToHelpTopic(data, isrootindex) {
         var pathname = window.location.href;
-        var pathonly = pathname.substring(0, pathname.lastIndexOf("/"));
+        var pathonly = escapeHtml(pathname.substring(0, pathname.lastIndexOf("/")));
         var helptopic = "";
         var notfoundtopic = "";
         var notFoundTopicAppId = "not_found";
         
         $.urlParam = function (name) {
-            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            var results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href);
             return results[1] || 0;
         }
         
@@ -87,4 +87,23 @@
         }
         rawFile.send(null);
     }
+
+    /**
+     * Escape user input in order to prevent XSS attacks
+     *
+     * @param unsafe
+     * @returns {*}
+     */
+    function escapeHtml(unsafe) {
+        if (! unsafe) {
+            return unsafe;
+        }
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
 })();

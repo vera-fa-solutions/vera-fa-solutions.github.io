@@ -427,6 +427,10 @@ img{
 	text-decoration: line-through;
 }
 
+/* PAL2-6297 overline */
+.overline {
+	text-decoration: overline;
+}
 
 .emphasis{
     font-style: italic;
@@ -905,4 +909,15 @@ div.feedback-panel .btn {
 .modal .ais-SearchBox-submit {
     position: absolute;
     right: 10px;
+}
+
+.info-elements {
+    display: none;
+}
+ a.indexterm {
+    display: none;
+}
+
+.index .indexdiv a.indexterm {
+    display: inline;
 }

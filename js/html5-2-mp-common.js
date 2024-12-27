@@ -43,7 +43,12 @@ $(document).ready(function () {
     $(document.body).on('keypress', 'form .search-field', function (e) {
         if(e.which === 13 && enterKey === 'select'){
             /*Note: trigger click doesn't work, need to use this*/
-            $('.selected-searchresultitem a')[0].click();
+            const $searchResultItemLink = $('.selected-searchresultitem a');
+            if (!$searchResultItemLink.length) {
+                return;
+            }
+            /*Note: trigger click doesn't work, need to use this*/
+            $searchResultItemLink[0].click();
             $('form .search-field').blur();
         }
         return e.which !== 13;
@@ -102,12 +107,14 @@ function mapVersionPage(){
                 currentVersion = version;
             }
         });
-        const lang = document.documentElement.lang || portalLanguage || '';
+        const lang = portalLanguage || document.documentElement.lang || '';
         const candidateURL = URLFromHref(this.getAttribute('href'));
         const defaultURL = URLFromHref(this.getAttribute('href'));
 
-        // for default - only set lang
+        // set lang param in case the target is the portal page
         defaultURL.searchParams.set('lang', lang);
+        candidateURL.searchParams.set('lang', lang);
+
 
         // for candidate - try use current with new version only
         const newVersion = candidateURL.pathname.replace('index.html', '')
@@ -181,7 +188,7 @@ function setActiveTocline() {
     path = path.replace(/\?.*$/, '');
 
     //Clean slate
-    $("aside ul.toc a").parent().removeClass("active").removeClass("opened");
+    $("aside ul.toc a").parent().removeClass("active");
 
     var links = $('aside ul.toc>li>a');
 
@@ -200,7 +207,7 @@ function buildSectionToc() {
         //Checks for the current actual chunk topic, even if an internal section in another chunk is clicked, to build section TOC then too
         // CH update: Fix for vaoid partial match in regex, added '/' before currentChunkId
         var currentChunkId = $('#topic-content > section').attr('id');
-        var regex = new RegExp(".*/" + currentChunkId + "\.html$");
+        var regex = new RegExp(".*/" + currentChunkId + "\\.html$");
         if ($('#topic-content > section').is('[data-permalink]')) {
             currentChunkId = $('#topic-content > section').attr('data-permalink');
             var currentChunkIdDecoded = decodeURI(currentChunkId);
@@ -220,6 +227,8 @@ function buildSectionToc() {
             $(".section-toc").remove();
         } else {
             var sectionTocLinks = links.clone();
+            // PAL2-9835 DJ: Select first valid decendant link for topicheads.
+            sectionTocLinks = handleTopicheadInSectionToc(sectionTocLinks);
             //Only show first level children, section TOCS could get very long otherwise
             sectionTocLinks.find('ul').remove();
             sectionTocLinks.find('.glyphicon').remove();
@@ -228,6 +237,15 @@ function buildSectionToc() {
             $(".section-toc ul").css('display', 'block');
         }
     }
+}
+
+function handleTopicheadInSectionToc(sectionTocLinks) {
+    sectionTocLinks.children('li').each(function () {
+        if($(this).children('a').hasClass('topichead')) {
+            $(this).children('a').first().attr('href', $(this).find('a:not(.topichead').attr('href'));
+        }
+    });
+    return sectionTocLinks;
 }
 
 function chunkedPrevNext() {
@@ -301,7 +319,7 @@ function displayAccordionTarget(id) {
     try {
         var $accordion = $(id).closest('.accordion');
     } catch (e) {
-        var safeId = decodeURI(id);
+        var safeId = escapeHtml(decodeURI(id));
         var $accordion = $(safeId).closest('.accordion');
     }
     if ($accordion.length) {
@@ -374,4 +392,22 @@ function matchHrefWithRegex(href, regex) {
         hrefdecoded += '.html';
     }
     return hrefdecoded.match(regex);
+}
+
+/**
+ * Escape user input in order to prevent XSS attacks
+ *
+ * @param unsafe
+ * @returns {*}
+ */
+function escapeHtml(unsafe) {
+    if (! unsafe) {
+        return unsafe;
+    }
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }

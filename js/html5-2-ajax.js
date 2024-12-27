@@ -2,7 +2,6 @@ $(document).on('toc.ready', function () {
     setActiveTocline();
     chunkedPrevNext();
     buildSectionToc();
-    syntaxHighlight();
 
     if(useanchorlinks){
         setAnchors();
@@ -19,29 +18,38 @@ $(document).on('toc.ready', function () {
     var glyphicon = "<span class='glyphicon'></span>";
     $('ul.nav-site-sidebar .swagger-topic').append(glyphicon);
 
-    $(".nav-site-sidebar a:not(.topichead) .glyphicon, .nav-site-sidebar a.topichead").click(function (e) {
-        e.preventDefault();
-        $(this).closest("li").toggleClass("opened");
-    });
+    updateCollapseTocListener();
+    
 });
 
-function syntaxHighlight() {
-    /**
-     * Turn on syntax highlight if the hljs lib is available
-     */
-    if ("hljs" in window) {
-        $('pre').each(function (i, block) {
-            hljs.highlightBlock(block);
+function updateCollapseTocListener() {
+    if (collapseTocSectionOnLinkTitleClick) {
+        $(".nav-site-sidebar li>a:not(.topichead) .glyphicon, .nav-site-sidebar a.topichead, .nav-site-sidebar li>a").off();
+        $(".nav-site-sidebar li:not(.opened.active)>a:not(.topichead) .glyphicon, .nav-site-sidebar a.topichead, .nav-site-sidebar li.active>a").click(function (e) {
+            if (!($(this).hasClass('glyphicon') && $(this).parent().parent().hasClass('active'))) {
+                e.preventDefault();
+                $(this).closest("li").toggleClass("opened");
+                updateCollapseTocListener();
+            }
+        });
+    }else {
+        $(".nav-site-sidebar a:not(.topichead) .glyphicon, .nav-site-sidebar a.topichead").off();
+        $(".nav-site-sidebar a:not(.topichead) .glyphicon, .nav-site-sidebar a.topichead").click(function (e) {
+            e.preventDefault();
+            $(this).closest("li").toggleClass("opened");
+            updateCollapseTocListener();
         });
     }
 }
+
 
 function addPopover() {
     //Bootstrap popovers for glossterms
     $('[data-toggle="popover"]').off();
 
     $('[data-toggle="popover"]').popover({
-        trigger: "manual", placement: "auto bottom",
+        trigger: "manual",
+        placement: "auto bottom",
         container: 'body',
         html: true,
         content: function () {
@@ -55,12 +63,17 @@ function addPopover() {
         $(".popover .mediaobject img").removeClass('materialboxed');
 
         $('.popover').on("mouseleave", function () {
-            $(_this).popover('hide');
+            setTimeout(function () {
+                if (! $('.popover:hover').length && ! $(_this).is(':hover')) {
+                    $(_this).popover("hide");
+                }
+            },
+            300);
         });
     }).on("mouseleave", function () {
         var _this = this;
         setTimeout(function () {
-            if (! $('.popover:hover').length) {
+            if (! $('.popover:hover').length && ! $(_this).is(':hover')) {
                 $(_this).popover("hide");
             }
         },
@@ -90,6 +103,8 @@ $(document).ready(function () {
 
         /* Adjusting position in view for internal page toc links. */
         if($(this).closest('.section-nav-container').length){
+            var id = this.hash;
+            displayAccordionTarget(id);
             $(clickedhref).scrollView();
             event.preventDefault();
         }
@@ -124,6 +139,8 @@ $(document).ready(function () {
         }
         //for accordions:
         else if ($(this).parents('.panel-heading').length) {
+            event.preventDefault();
+        } else if (this.href === window.location.href) {
             event.preventDefault();
         } else {
             event.preventDefault();
@@ -176,7 +193,7 @@ function loadContent(href, hash) {
     /*Hide popovers if switching to a new page:*/
     $('[data-toggle="popover"]').popover('hide');
 
-    var id = href.split('#')[1];
+    var id = escapeHtml(href.split('#')[1]);
     if (typeof (id) !== "undefined") {
         id = jqEscapeChars(id);
     }
@@ -233,7 +250,8 @@ function loadContent(href, hash) {
                 }
                 chunkedPrevNext();
                 buildSectionToc();
-                syntaxHighlight();
+                setActiveTocline();
+                updateCollapseTocListener()
                 return false;
             }
         });
@@ -254,6 +272,8 @@ function loadContent(href, hash) {
         //Get dynamic code snippets from URL
         getEmbedCode();
 
+        setActiveTocline();
+        updateCollapseTocListener()
     });
 }
 
@@ -266,7 +286,25 @@ function loadContent(href, hash) {
  * @returns {string} string with special characters secaped.
  */
 function jqEscapeChars(id) {
-    return id.replace( /(:|\.|\[|\]|,|=|@)/g, "\\$1" );
+    return id.replace( /([\\:|\.|\[|\]|,|=|@])/g, "\\$1" );
+}
+
+/**
+ * Escape user input in order to prevent XSS attacks
+ *
+ * @param unsafe
+ * @returns {*}
+ */
+function escapeHtml(unsafe) {
+    if (! unsafe) {
+        return unsafe;
+    }
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 window.addEventListener('popstate', function (e) {

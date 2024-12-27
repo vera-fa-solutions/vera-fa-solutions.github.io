@@ -7,19 +7,19 @@ if (lang !== null) {
 //IE/Edge doesn't support URLSearchParams, so use this function:
 var lang = getQueryVariable("lang");
 if (lang) {
-    portalLanguage = lang;
+    portalLanguage = escapeHtml(lang);
 }
 
 $(document).ready(function () {
 
     //Only show the current language
     showCurrentLanguage(portalLanguage);
-    $("*[data-portal-language='" + portalLanguage + "'] .dropup.languages .dropdown-toggle").html($('*[data-portal-language="' + portalLanguage + '"] .language-item[lang="' + portalLanguage + '"]').text() + ' <b class="caret"></b>');
+    $("*[data-portal-language='" + portalLanguage + "'] .dropup.languages .dropdown-toggle").html(escapeHtml($('*[data-portal-language="' + portalLanguage + '"] .language-item[lang="' + portalLanguage + '"]').text()) + ' <b class="caret"></b>');
 
     $(".language-item").click(function (e) {
         e.preventDefault();
         portalLanguage = $(this).attr('lang');
-        $("*[data-portal-language='" + portalLanguage + "'] .dropup.languages .dropdown-toggle").html($(this).text() + ' <b class="caret"></b>');
+        $("*[data-portal-language='" + portalLanguage + "'] .dropup.languages .dropdown-toggle").html(escapeHtml($(this).text()) + ' <b class="caret"></b>');
         showCurrentLanguage(portalLanguage);
         addSearch();
     });
@@ -104,4 +104,22 @@ function getQueryVariableString(queryParams)
     }
 
     return parameters.join('&');
+}
+
+/**
+ * Escape user input in order to prevent XSS attacks
+ *
+ * @param unsafe
+ * @returns {*}
+ */
+function escapeHtml(unsafe) {
+    if (! unsafe) {
+        return unsafe;
+    }
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
