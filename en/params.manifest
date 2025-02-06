@@ -11,8 +11,8 @@
   <param name="use.multilingual.default.search" select="0"/>
   <param name="custom.css.source" select="/var/www/ccms/usr/fasolutions/xsl/custom/assets/layout-277042/653f8831a6645.css"/>
   <param name="portal.logo.filename" select="/var/www/ccms/usr/fasolutions/xsl/custom/assets/layout-277042/6110ef0e4aed1.png"/>
-  <param name="portal.background.filename" select="/var/www/ccms/usr/fasolutions/xsl/custom/assets/layout-277042/6053bad8f3438.jpeg"/>
-  <param name="portal.background.filename.out" select="/paligo/tmp/fasolutions/production-6798dcdde607f8.35780035/Documentation_for_review/out/css/image/portal-bg.jpg"/>
+  <param name="portal.background.filename" select="/var/www/ccms/usr/fasolutions/xsl/custom/assets/layout-277042/67a1049f53cb6.jpeg"/>
+  <param name="portal.background.filename.out" select="/paligo/tmp/fasolutions/production-67a48002cdcf38.86985693/Documentation_for_review/out/css/image/portal-bg.jpg"/>
   <param name="company.name" select="FA Solutions"/>
   <param name="copyright.year" select=""/>
   <param name="copyright"> © 2025 FA Solutions </param>
@@ -24,7 +24,7 @@
   <param name="google.analytics" select="UA-66480610-5"/>
   <param name="google.analytics.type" select="gtag"/>
   <param name="user.custom.script" select="0"/>
-  <param name="layout.custom.script" select="/var/www/ccms/usr/fasolutions/xsl/custom/assets/layout-277042/65b8b64bed5d3.js"/>
+  <param name="layout.custom.script" select="/var/www/ccms/usr/fasolutions/xsl/custom/assets/layout-277042/67a11c91199e9.js"/>
   <param name="create.sitemap" select="0"/>
   <param name="destination.domain" select=""/>
   <param name="submit.feedback" select="1"/>
@@ -100,11 +100,11 @@
   <param name="slides.revealjs.theme.custom" select=""/>
   <param name="slides.revealjs.background.image.opacity" select="1"/>
   <param name="slides.revealjs.default.background.image" select=""/>
-  <param name="slides.revealjs.default.background.image.out" select="/paligo/tmp/fasolutions/production-6798dcdde607f8.35780035/Documentation_for_review/out/css/image/default_slide_background.png"/>
+  <param name="slides.revealjs.default.background.image.out" select="/paligo/tmp/fasolutions/production-67a48002cdcf38.86985693/Documentation_for_review/out/css/image/default_slide_background.png"/>
   <param name="slides.revealjs.logo" select=""/>
-  <param name="slides.revealjs.logo.out" select="/paligo/tmp/fasolutions/production-6798dcdde607f8.35780035/Documentation_for_review/out/css/image/logo-light.png"/>
+  <param name="slides.revealjs.logo.out" select="/paligo/tmp/fasolutions/production-67a48002cdcf38.86985693/Documentation_for_review/out/css/image/logo-light.png"/>
   <param name="slides.revealjs.logo.alt" select=""/>
-  <param name="slides.revealjs.logo.alt.out" select="/paligo/tmp/fasolutions/production-6798dcdde607f8.35780035/Documentation_for_review/out/css/image/logo-dark.png"/>
+  <param name="slides.revealjs.logo.alt.out" select="/paligo/tmp/fasolutions/production-67a48002cdcf38.86985693/Documentation_for_review/out/css/image/logo-dark.png"/>
   <param name="delayed.algolia.search" select="0"/>
   <param name="use.breadcrumbs.for.algolia.searchresults" select="0"/>
   <param name="choose.startpage.by.role" select="0"/>
